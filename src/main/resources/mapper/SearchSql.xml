@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.SearchMapperInter">
+<select id="getList" parameterType="Map" resultType="notice">
+	SELECT * FROM job_posting WHERE experience&lt;#{experience}
+	<if test="job_type1!=''">
+	AND (job_type LIKE #{job_type1} OR job_type LIKE #{job_type2} OR job_type LIKE #{job_type3})
+	</if>
+	<if test="com_addr1!=''">
+	AND (com_addr LIKE #{com_addr1} OR com_addr LIKE #{com_addr2} OR com_addr LIKE #{com_addr3} OR com_addr LIKE #{com_addr4} OR com_addr LIKE #{com_addr5})
+	</if>
+	<if test="preferred_tech1!=''">
+	AND (preferred_tech LIKE #{preferred_tech1} OR preferred_tech LIKE #{preferred_tech2} OR preferred_tech LIKE #{preferred_tech3} OR preferred_tech LIKE #{preferred_tech4} OR preferred_tech LIKE #{preferred_tech5})
+	</if>
+	ORDER BY 
+		<if test="sort==1">
+		num
+		</if>
+		<if test="sort==0">
+		view_cnt
+		</if>
+	DESC LIMIT #{start},#{perpage}
+</select>
+<select id="getTotalCount" resultType="int"> select count(*) from job_posting </select>
+<select id="getAllDatas" resultType="notice">
+	select * from job_posting order by
+		<if test="sort==1">
+		num
+		</if>
+		<if test="sort==0">
+		view_cnt
+		</if>
+	desc limit #{start},#{perpage}
+</select>
+<select id="corpname" resultType="String">
+	select corp_id from job_posting group by corp_id order by  count(corp_id) desc limit 3
+</select>
+<select id="corp3st" parameterType="String" resultType="notice">
+	select * from job_posting where corp_id=#{corp_id} order by num desc limit 1
+</select>
+<select id="getSearchCount" parameterType="Map" resultType="int">
+	SELECT count(*) FROM job_posting WHERE experience&lt;#{experience}
+	<if test="job_type1!=''">
+	AND (job_type LIKE #{job_type1} OR job_type LIKE #{job_type2} OR job_type LIKE #{job_type3})
+	</if>
+	<if test="com_addr1!=''">
+	AND (com_addr LIKE #{com_addr1} OR com_addr LIKE #{com_addr2} OR com_addr LIKE #{com_addr3} OR com_addr LIKE #{com_addr4} OR com_addr LIKE #{com_addr5})
+	</if>
+	<if test="preferred_tech1!=''">
+	AND (preferred_tech LIKE #{preferred_tech1} OR preferred_tech LIKE #{preferred_tech2} OR preferred_tech LIKE #{preferred_tech3} OR preferred_tech LIKE #{preferred_tech4} OR preferred_tech LIKE #{preferred_tech5})
+	</if>
+	ORDER BY view_cnt DESC
+</select>
+</mapper>

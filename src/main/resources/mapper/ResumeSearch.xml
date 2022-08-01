@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.ResumeSearchMapper">
+<select id="getAllDatas" parameterType="Map" resultType="resume">
+	select * from resume 
+	where open_radio=0 order by resume_idx desc limit #{start},#{perpage}
+</select>
+<select id="getTotalCount" resultType="int">
+	select count(*) from resume where open_radio=0
+</select>
+<select id="getList" parameterType="Map" resultType="resume">
+	select * from resume where open_radio=0
+	<if test="job_type1!=''">
+	AND (job_type LIKE #{job_type1} OR job_type LIKE #{job_type2} OR job_type LIKE #{job_type3})
+	</if>
+	<if test="user_addr1!=''">
+	AND (user_addr LIKE #{user_addr1} OR user_addr LIKE #{user_addr2} OR user_addr LIKE #{user_addr3} OR user_addr LIKE #{user_addr4} OR user_addr LIKE #{user_addr5})
+	</if>
+	<if test="total_year!=''">
+	AND (substring_index(total_year,',',1)+substring_index(total_year,',',-1))/12 &gt; #{total_year}
+	</if>
+	<if test="tech_tags1!=''">
+	AND (tech_tags LIKE #{tech_tags1} OR tech_tags LIKE #{tech_tags2} OR tech_tags LIKE #{tech_tags3} OR tech_tags LIKE #{tech_tags4} OR tech_tags LIKE #{tech_tags5})
+	</if>
+	ORDER BY resume_idx DESC LIMIT #{start},#{perpage}
+</select>
+<select id="jobTypeCnt" resultType="String">
+	select job_type from resume 
+</select>
+<select id="getSearchCount" parameterType="Map" resultType="int">
+	SELECT count(*) FROM resume WHERE open_radio=0
+	<if test="job_type1!=''">
+	AND (job_type LIKE #{job_type1} OR job_type LIKE #{job_type2} OR job_type LIKE #{job_type3})
+	</if>
+	<if test="user_addr1!=''">
+	AND (user_addr LIKE #{user_addr1} OR user_addr LIKE #{user_addr2} OR user_addr LIKE #{user_addr3} OR user_addr LIKE #{user_addr4} OR user_addr LIKE #{user_addr5})
+	</if>
+	<if test="total_year!=''">
+	AND (substring_index(total_year,',',1)+substring_index(total_year,',',-1))/12 &gt; #{total_year}
+	</if>
+	<if test="tech_tags1!=''">
+	AND (tech_tags LIKE #{tech_tags1} OR tech_tags LIKE #{tech_tags2} OR tech_tags LIKE #{tech_tags3} OR tech_tags LIKE #{tech_tags4} OR tech_tags LIKE #{tech_tags5})
+	</if>
+	ORDER BY resume_idx DESC
+</select>
+</mapper>
